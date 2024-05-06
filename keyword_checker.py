@@ -20,6 +20,7 @@ for filename in os.listdir((directory)):
     if filename.endswith(file_ext):
         allowed_imports.append(filename[:-3])
 
+banned_keywords_count = 0
 in_docstring = False
 for filename in os.listdir(directory):
     if filename.endswith(".py"):
@@ -40,13 +41,17 @@ for filename in os.listdir(directory):
                             flag = False
                         if word in banned_imports:
                             print(f"{filename} {line_num}: {line}")
+                            banned_keywords_count += 1
                             continue
-                    if flag: print(f"{filename} {line_num}: {line}")
+                    if flag:
+                        print(f"{filename} {line_num}: {line}")
+                        banned_keywords_count += 1
                     continue #so that imports can't set off keywords
 
                 for keyword in banned_keywords:
                     if keyword in line:
                         print(f"{filename} {line_num}: {line}")
+                        banned_keywords_count += 1
                 line_num += 1
 
-print("Done searching.")                       
+print(f"Done searching. Found {banned_keywords_count} banned keyword(s)")                       
